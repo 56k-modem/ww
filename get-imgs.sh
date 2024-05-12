@@ -1,0 +1,40 @@
+#!/bin/bash
+
+warcdir="/path/to/directory/warc"
+workdir="/path/to/directory/working"
+
+
+mkdir -p "$workdir"
+
+process_warc() {
+    local warcfile="$1"
+    echo "Processing $warcfile"
+    echo "Last checked: $warcfile" > $HOME/last_checked.txt
+    python3 -m warcat extract "$warcfile" --output-dir "$warcdir" --progress
+    local num_files=$(find "$warcdir" -type f -name "*_fs.jpg" | wc -l)
+    if [ "$num_files" -gt 0 ]; then
+        find "$warcdir" -type f -name "*_fs.jpg" -exec mv -v "{}" "$workdir/" \; | awk -F "'" '{print $2}'
+        rm -f "$warcfile"
+        echo "Done processing $warcfile"
+        return 0
+    else
+        echo "No files found for processing."
+        rm -f "$warcfile"
+        echo "Done processing $warcfile"
+        return 1
+    fi
+}
+
+for warcfile in "$warcdir"/*.warc.gz; do
+    if process_warc "$warcfile"; then
+        read -p "[Enter] to process the next warc archive"
+        rm -rf "$workdir"/*
+        echo "Working directory emptied."
+    fi
+done
+
+echo "No more warc archives found."
+
+# Cleanup
+rm -rf "$warcdir"/*
+echo "Cleanup completed."

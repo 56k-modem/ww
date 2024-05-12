@@ -1,8 +1,10 @@
 #!/bin/bash
 
-warcdir="/path/to/directory/warc"
-workdir="/path/to/directory/working"
+# Define base directory
+basedir="/path/to/directory"
 
+warcdir="$basedir/warc"
+workdir="$basedir/working"
 
 mkdir -p "$workdir"
 

@@ -18,6 +18,7 @@ process_warc() {
         find "$warcdir" -type f -name "*_fs.jpg" -exec mv -v "{}" "$workdir/" \; | awk -F "'" '{print $2}'
         rm -f "$warcfile"
         echo "Done processing $warcfile"
+        echo "$num_files files found."
         return 0
     else
         echo "No files found for processing."

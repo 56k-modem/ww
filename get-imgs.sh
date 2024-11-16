@@ -19,6 +19,16 @@ process_warc() {
         rm -f "$warcfile"
         echo "Done processing $warcfile"
         echo "$num_files files found."
+        declare -A year_counts
+        for jpgfile in "$workdir"/*.jpg; do
+            year=$(date -r "$jpgfile" "+%Y")
+            ((year_counts["$year"]++))
+        done
+        for year in "${!year_counts[@]}"; do
+            echo "$year: ${year_counts[$year]}"
+        done | sort
+        unset year_counts
+        unset jpgfile
         return 0
     else
         echo "No files found for processing."

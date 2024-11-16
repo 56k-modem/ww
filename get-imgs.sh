@@ -1,8 +1,6 @@
 #!/bin/bash
-# temp comment
-# Define base directory
-basedir="/path/to/directory"
 
+basedir="/path/to/directory"
 warcdir="$basedir/warc"
 workdir="$basedir/working"
 
